@@ -1,20 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function Creature(props) {
-    const [isAwake, setIsAwake] = useState(false);
     const [position, setPosition] = useState({ x: props.x, y: props.y });
+    const wasAwake = useRef(props.isAwake);
 
-    const handleClick = () => {
-        const nextIsAwake = !isAwake;
-        setIsAwake(nextIsAwake);
-        props.onAwakeChange(nextIsAwake);
-
-        if (nextIsAwake) {
+    useEffect(() => {
+        if (!wasAwake.current && props.isAwake) {
             setPosition({
                 x: Math.floor(Math.random() * 680),
                 y: Math.floor(Math.random() * 680)
             });
         }
+
+        wasAwake.current = props.isAwake;
+    }, [props.isAwake]);
+
+    const handleClick = () => {
+        props.onAwakeChange(!props.isAwake);
     };
 
     const style = {
@@ -30,7 +32,7 @@ function Creature(props) {
             <button
                 type="button"
                 onClick={handleClick}
-                aria-label={`${isAwake ? 'Put' : 'Wake'} ${props.name} ${isAwake ? 'to sleep' : 'up'}`}
+                aria-label={`${props.isAwake ? 'Put' : 'Wake'} ${props.name} ${props.isAwake ? 'to sleep' : 'up'}`}
                 style={{
                     border: 0,
                     padding: 0,
@@ -39,7 +41,7 @@ function Creature(props) {
                 }}
             >
                 <img
-                    src={isAwake ? props.awakeImageUrl : props.sleepImageUrl}
+                    src={props.isAwake ? props.awakeImageUrl : props.sleepImageUrl}
                     alt={props.name}
                     width="120"
                 />
