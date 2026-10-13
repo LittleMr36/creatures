@@ -5,16 +5,16 @@ function Creature(props) {
     const [position, setPosition] = useState({ x: props.x, y: props.y });
 
     const handleClick = () => {
-        setIsAwake((previousIsAwake) => {
-            if (!previousIsAwake) {
-                setPosition({
-                    x: Math.floor(Math.random() * 680),
-                    y: Math.floor(Math.random() * 680)
-                });
-            }
+        const nextIsAwake = !isAwake;
+        setIsAwake(nextIsAwake);
+        props.onAwakeChange(nextIsAwake);
 
-            return !previousIsAwake;
-        });
+        if (nextIsAwake) {
+            setPosition({
+                x: Math.floor(Math.random() * 680),
+                y: Math.floor(Math.random() * 680)
+            });
+        }
     };
 
     const style = {
