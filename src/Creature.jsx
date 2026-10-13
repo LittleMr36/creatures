@@ -2,10 +2,25 @@ import { useState } from 'react';
 
 function Creature(props) {
     const [isAwake, setIsAwake] = useState(false);
+    const [position, setPosition] = useState({ x: props.x, y: props.y });
+
+    const handleClick = () => {
+        setIsAwake((previousIsAwake) => {
+            if (!previousIsAwake) {
+                setPosition({
+                    x: Math.floor(Math.random() * 680),
+                    y: Math.floor(Math.random() * 680)
+                });
+            }
+
+            return !previousIsAwake;
+        });
+    };
+
     const style = {
         position: 'absolute',
-        left: props.x + 'px',
-        top: props.y + 'px',
+        left: position.x + 'px',
+        top: position.y + 'px',
         textAlign: 'center',
         imageRendering: 'pixelated'
     };
@@ -14,7 +29,7 @@ function Creature(props) {
         <div style={style}>
             <button
                 type="button"
-                onClick={() => setIsAwake(!isAwake)}
+                onClick={handleClick}
                 aria-label={`${isAwake ? 'Put' : 'Wake'} ${props.name} ${isAwake ? 'to sleep' : 'up'}`}
                 style={{
                     border: 0,
